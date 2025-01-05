@@ -6,8 +6,10 @@ require_relative "autoflux/version"
 module Autoflux
   class Error < StandardError; end
 
+  require_relative "autoflux/agent"
   require_relative "autoflux/memory"
   require_relative "autoflux/state"
+  require_relative "autoflux/assistant"
   require_relative "autoflux/stop"
   require_relative "autoflux/workflow"
 end

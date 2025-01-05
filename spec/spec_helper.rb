@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require "autoflux"
 require "simplecov"
 SimpleCov.start
+
+require "autoflux"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

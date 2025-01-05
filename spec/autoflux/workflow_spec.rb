@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe Autoflux::Workflow do
-  subject(:workflow) { described_class.new(state: state) }
-  let(:state) { nil }
+  subject(:workflow) { described_class.new(agent: agent, state: state) }
+  let(:state) { Autoflux::Assistant.new }
+  let(:agent) { dummy_agent.new }
+  let(:dummy_agent) do
+    Class.new(Autoflux::Agent) do
+      def call(**)
+        { role: :assistant, content: "Hello, I am a helpful assistant" }
+      end
+    end
+  end
 
   describe "#run" do
     subject(:run) { workflow.run }
@@ -11,6 +19,12 @@ RSpec.describe Autoflux::Workflow do
 
     context "when the state is abstract" do
       let(:state) { Autoflux::State.new }
+
+      it { expect { run }.to raise_error(NotImplementedError) }
+    end
+
+    context "when the agent is abstract" do
+      let(:agent) { Autoflux::Agent.new }
 
       it { expect { run }.to raise_error(NotImplementedError) }
     end
@@ -30,7 +44,8 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow.memory, :data)
           .from([])
           .to([
-                { role: :system, content: "Hello, I am a helpful assistant" }
+                { role: :system, content: "Hello, I am a helpful assistant" },
+                { role: :assistant, content: "Hello, I am a helpful assistant" }
               ])
       end
     end

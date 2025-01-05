@@ -3,10 +3,11 @@
 module Autoflux
   # The workflow is a state machine to manage the flow of agentic AI.
   class Workflow
-    attr_reader :state, :memory
+    attr_reader :agent, :state, :memory
 
     # @rbs state: State
-    def initialize(state: nil, memory: Memory.new)
+    def initialize(agent:, state: nil, memory: Memory.new)
+      @agent = agent
       @state = state
       @memory = memory
     end
