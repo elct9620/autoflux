@@ -133,12 +133,12 @@ The IO is an adapter to the input and output. You can inherit the `Autoflux::IO`
 ```ruby
 # :nodoc:
 class ConsoleIO < Autoflux::IO
-  def input
+  def read
     print 'User: '
     gets.chomp
   end
 
-  def output(message)
+  def write(message)
     puts "Assistant: #{message}"
   end
 end
