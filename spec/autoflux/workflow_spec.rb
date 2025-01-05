@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require "autoflux/stdio"
+
 RSpec.describe Autoflux::Workflow do
-  subject(:workflow) { described_class.new(agent: agent, state: state) }
-  let(:state) { Autoflux::Assistant.new }
+  subject(:workflow) { described_class.new(agent: agent, io: io, state: state) }
+  let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
+  let(:state) { Autoflux::User.new }
   let(:agent) { dummy_agent.new }
   let(:dummy_agent) do
     Class.new(Autoflux::Agent) do
@@ -45,6 +48,7 @@ RSpec.describe Autoflux::Workflow do
           .from([])
           .to([
                 { role: :system, content: "Hello, I am a helpful assistant" },
+                { role: :user, content: "Hello" },
                 { role: :assistant, content: "Hello, I am a helpful assistant" }
               ])
       end

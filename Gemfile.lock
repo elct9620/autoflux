@@ -7,14 +7,18 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    attr_extras (7.1.0)
     diff-lcs (1.5.1)
     docile (1.4.1)
     json (2.9.0)
     language_server-protocol (3.17.0.3)
+    optimist (3.2.0)
     parallel (1.26.3)
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
+    patience_diff (1.2.0)
+      optimist (~> 3.0)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
@@ -51,6 +55,10 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
+    super_diff (0.14.0)
+      attr_extras (>= 6.2.4)
+      diff-lcs
+      patience_diff
     unicode-display_width (3.1.2)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -65,6 +73,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   simplecov
+  super_diff
 
 BUNDLED WITH
    2.5.23

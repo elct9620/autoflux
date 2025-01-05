@@ -7,6 +7,8 @@ module Autoflux
       res = workflow.agent.call(memory: workflow.memory)
       workflow.memory.push(res)
 
+      workflow.io.write(res[:content]) if res[:role] == :assistant
+
       Stop.new
     end
   end
