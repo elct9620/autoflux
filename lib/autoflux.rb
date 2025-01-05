@@ -10,6 +10,7 @@ module Autoflux
   require_relative "autoflux/io"
   require_relative "autoflux/memory"
   require_relative "autoflux/state"
+  require_relative "autoflux/start"
   require_relative "autoflux/user"
   require_relative "autoflux/assistant"
   require_relative "autoflux/stop"
