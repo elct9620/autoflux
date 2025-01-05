@@ -20,5 +20,19 @@ RSpec.describe Autoflux::Workflow do
 
       it { is_expected.to be_nil }
     end
+
+    context "when the system prompt is given" do
+      subject(:run) { workflow.run(system_prompt: system_prompt) }
+      let(:system_prompt) { "Hello, I am a helpful assistant" }
+
+      it do
+        expect { run }
+          .to change(workflow.memory, :data)
+          .from([])
+          .to([
+                { role: :system, content: "Hello, I am a helpful assistant" }
+              ])
+      end
+    end
   end
 end

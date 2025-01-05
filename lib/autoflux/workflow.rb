@@ -12,7 +12,10 @@ module Autoflux
     end
 
     # Run the workflow.
-    def run
+    #
+    # @rbs system_prompt: String?
+    def run(system_prompt: nil)
+      memory.push(role: :system, content: system_prompt) unless system_prompt.nil?
       @state = @state.call(workflow: self) until @state.nil?
     end
   end
