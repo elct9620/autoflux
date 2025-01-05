@@ -7,6 +7,8 @@ module Autoflux
       res = workflow.agent.call(memory: workflow.memory)
       workflow.memory.push(res)
 
+      return Tools.new if res["tool_calls"]&.any?
+
       workflow.io.write(res[:content]) if res[:role] == :assistant
 
       User.new

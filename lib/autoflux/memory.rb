@@ -17,5 +17,10 @@ module Autoflux
     def push(data)
       @data.push(data)
     end
+
+    # Get the last data from the memory.
+    def last
+      @data.last
+    end
   end
 end

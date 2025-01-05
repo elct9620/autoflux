@@ -32,10 +32,62 @@ RSpec.describe Autoflux::Workflow do
       it { expect { run }.to raise_error(NotImplementedError) }
     end
 
-    context "when the state is a concrete state" do
-      let(:state) { Autoflux::Stop.new }
+    context "when the agent returns non-exist tools" do
+      before do
+        allow(agent).to receive(:call).and_return(
+          { role: :assistant,
+            "tool_calls" => [{ "function" => { "name" => "dummy", "arguments" => "{}" }, "id" => "dummy-id" }] },
+          { role: :assistant, content: "Hello, I am a helpful assistant" }
+        )
+      end
 
-      it { is_expected.to be_nil }
+      it do
+        expect { run }
+          .to change(workflow.memory, :data)
+          .from([])
+          .to([
+                { role: :user, content: "Hello" },
+                { role: :assistant,
+                  "tool_calls" => [{ "function" => { "name" => "dummy", "arguments" => "{}" }, "id" => "dummy-id" }] },
+                { role: :tool, content: '{"status":"error","message":"Tool not found"}', tool_call_id: "dummy-id" },
+                { role: :assistant, content: "Hello, I am a helpful assistant" }
+              ])
+      end
+    end
+
+    context "when the agent runs tools" do
+      let(:dummy_tool) do
+        Class.new(Autoflux::Tool) do
+          def call(**)
+            { status: "success", message: "Hello, I am a dummy tool" }
+          end
+        end
+      end
+      let(:agent) do
+        dummy_agent.new(tools: [dummy_tool.new(name: "dummy", description: "A dummy tool")])
+      end
+
+      before do
+        allow(agent).to receive(:call).and_return(
+          { role: :assistant,
+            "tool_calls" => [{ "function" => { "name" => "dummy", "arguments" => "{}" }, "id" => "dummy-id" }] },
+          { role: :assistant, content: "Hello, I am a helpful assistant" }
+        )
+      end
+
+      it do
+        expect { run }
+          .to change(workflow.memory, :data)
+          .from([])
+          .to([
+                { role: :user, content: "Hello" },
+                { role: :assistant,
+                  "tool_calls" => [{ "function" => { "name" => "dummy", "arguments" => "{}" }, "id" => "dummy-id" }] },
+                { role: :tool, content: '{"status":"success","message":"Hello, I am a dummy tool"}',
+                  tool_call_id: "dummy-id" },
+                { role: :assistant, content: "Hello, I am a helpful assistant" }
+              ])
+      end
     end
 
     context "when the system prompt is given" do
