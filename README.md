@@ -53,6 +53,8 @@ You can give a system prompt when running the workflow:
 workflow.run(system_prompt: 'Help user to solve the problem')
 ```
 
+When receive "exit" from the user, the workflow transition to the stop state.
+
 ### Agent
 
 The agent is an adapter to the LLM model. You can ihnerit the `Autoflux::Agent` class to implement your own agent.
