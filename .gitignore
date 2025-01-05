@@ -10,5 +10,8 @@
 # NPM for development
 node_modules/
 
+# coverage
+coverage/
+
 # rspec failure tracking
 .rspec_status
