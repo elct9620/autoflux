@@ -9,7 +9,7 @@ module Autoflux
 
       workflow.io.write(res[:content]) if res[:role] == :assistant
 
-      Stop.new
+      User.new
     end
   end
 end

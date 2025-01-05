@@ -4,7 +4,7 @@ require "autoflux/stdio"
 
 RSpec.describe Autoflux::Workflow do
   subject(:workflow) { described_class.new(agent: agent, io: io, state: state) }
-  let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
+  let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\nexit")) }
   let(:state) { Autoflux::User.new }
   let(:agent) { dummy_agent.new }
   let(:dummy_agent) do
@@ -52,6 +52,8 @@ RSpec.describe Autoflux::Workflow do
                 { role: :assistant, content: "Hello, I am a helpful assistant" }
               ])
       end
+
+      it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
     end
   end
 end
