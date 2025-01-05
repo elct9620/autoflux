@@ -6,7 +6,7 @@ module Autoflux
     attr_reader :agent, :state, :memory, :io
 
     # @rbs state: State
-    def initialize(agent:, io:, state: nil, memory: Memory.new)
+    def initialize(agent:, io:, state: Start.new, memory: Memory.new)
       @agent = agent
       @io = io
       @state = state
