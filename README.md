@@ -57,7 +57,7 @@ When receive "exit" from the user, the workflow transition to the stop state.
 
 ### Agent
 
-The agent is an adapter to the LLM model. You can ihnerit the `Autoflux::Agent` class to implement your own agent.
+The agent is an adapter to the LLM model. You can inherit the `Autoflux::Agent` class to implement your own agent.
 
 ```ruby
 # :nodoc:
@@ -99,7 +99,7 @@ The memory is chat history which keep in the workflow. You can decide to use it 
 
 ### Tool
 
-The tool is a function that can be used in the agent's response. You can ihnerit the `Autoflux::Tool` class to implement your own tool.
+The tool is a function that can be used in the agent's response. You can inherit the `Autoflux::Tool` class to implement your own tool.
 
 ```ruby
 # :nodoc:
@@ -128,7 +128,7 @@ The tool is require the name and description. The parameters is optional.
 
 ### IO
 
-The IO is an adapter to the input and output. You can ihnerit the `Autoflux::IO` class to implement your own IO.
+The IO is an adapter to the input and output. You can inherit the `Autoflux::IO` class to implement your own IO.
 
 ```ruby
 # :nodoc:
