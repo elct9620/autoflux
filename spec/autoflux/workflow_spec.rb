@@ -10,7 +10,7 @@ RSpec.describe Autoflux::Workflow do
   let(:dummy_agent) do
     Class.new(Autoflux::Agent) do
       def call(**)
-        { role: :assistant, content: "Hello, I am a helpful assistant" }
+        { "role" => "assistant", "content" => "Hello, I am a helpful assistant" }
       end
     end
   end
@@ -101,7 +101,7 @@ RSpec.describe Autoflux::Workflow do
           .to([
                 { role: :system, content: "Hello, I am a helpful assistant" },
                 { role: :user, content: "Hello" },
-                { role: :assistant, content: "Hello, I am a helpful assistant" }
+                { "role" => "assistant", "content" => "Hello, I am a helpful assistant" }
               ])
       end
 
