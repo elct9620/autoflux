@@ -30,8 +30,8 @@ stateDiagram-v2
     Start --> User
     User --> Assistant
     Assistant --> User
-    Assistant --> Tool
-    Tool --> Assistant
+    Assistant --> Tools
+    Tools --> Assistant
     User --> Stop
     Stop --> [*]
 ```
