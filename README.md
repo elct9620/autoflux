@@ -3,6 +3,9 @@ Autoflux
 
 A lightweight AI agent framework
 
+> [!WARNING]
+> To support common agentic AI workflow, the API will be changed at any time until the design is completed.
+
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
