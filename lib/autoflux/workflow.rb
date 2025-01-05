@@ -12,7 +12,7 @@ module Autoflux
 
     # Run the workflow.
     def run
-      @state = @state.call until @state.nil?
+      @state = @state.call(workflow: self) until @state.nil?
     end
   end
 end
