@@ -3,9 +3,8 @@
 require "autoflux/stdio"
 
 RSpec.describe Autoflux::Workflow do
-  subject(:workflow) { described_class.new(agent: agent, io: io, step: step) }
+  subject(:workflow) { described_class.new(agent: agent, io: io) }
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\nexit")) }
-  let(:step) { Autoflux::Step::Start.new }
   let(:agent) { dummy_agent.new }
   let(:dummy_agent) do
     Class.new(Autoflux::Agent) do
@@ -19,6 +18,8 @@ RSpec.describe Autoflux::Workflow do
 
   describe "#step" do
     subject { workflow.step }
+    let(:workflow) { described_class.new(agent: agent, io: io, step: step) }
+    let(:step) { Autoflux::Step::Start.new }
 
     it { is_expected.to be_a(Autoflux::Step::Start) }
 
@@ -32,6 +33,7 @@ RSpec.describe Autoflux::Workflow do
   describe "#to_h" do
     subject(:to_h) { workflow.to_h }
     let(:workflow) { described_class.new(id: "custom-id", agent: agent, io: io, step: step) }
+    let(:step) { Autoflux::Step::Start.new }
 
     it { is_expected.to include(id: "custom-id", step: "Autoflux::Step::Start") }
 
@@ -48,6 +50,7 @@ RSpec.describe Autoflux::Workflow do
     it { is_expected.to be_nil }
 
     context "when the state is abstract" do
+      let(:workflow) { described_class.new(agent: agent, io: io, step: step) }
       let(:step) { Autoflux::Step::Base.new }
 
       it { expect { run }.to raise_error(NotImplementedError) }
