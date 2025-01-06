@@ -2,10 +2,10 @@ module Autoflux
   # The workflow is a state machine to manage the flow of agentic AI.
   class Workflow
     @id: String
-    @agent: Agent
-    @io: untyped
-    @step: untyped
-    @memory: untyped
+    @agent: _Agent
+    @io: _IO
+    @step: _Step
+    @memory: _Memory
 
     # Generate a random UUID.
     #
@@ -13,12 +13,12 @@ module Autoflux
     def self.next_id: () -> String
 
     attr_reader id: String
-    attr_reader agent: Agent
-    attr_reader memory: untyped
-    attr_reader io: untyped
+    attr_reader agent: _Agent
+    attr_reader memory: _Memory
+    attr_reader io: _IO
 
     # @rbs state: State
-    def initialize: (agent: Agent, io: untyped, ?id: String?, ?step: untyped, ?memory: untyped) -> void
+    def initialize: (agent: _Agent, io: _IO, ?id: String?, ?step: _Step, ?memory: _Memory) -> void
 
     # Run the workflow.
     #
@@ -29,7 +29,7 @@ module Autoflux
     def stop: () -> void
 
     # Get the current step. If the step is nil, return a Stop step.
-    def step: () -> untyped
+    def step: () -> _Step
 
     # Get the hash representation of the workflow.
     #

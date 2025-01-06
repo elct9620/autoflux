@@ -8,6 +8,10 @@ module Autoflux
       def call(**)
         raise NotImplementedError
       end
+
+      def name
+        self.class.name || "Step"
+      end
     end
   end
 end

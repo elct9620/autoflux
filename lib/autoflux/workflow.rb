@@ -32,7 +32,7 @@ module Autoflux
     # @rbs system_prompt: String?
     def run(system_prompt: nil)
       memory.push(role: :system, content: system_prompt) unless system_prompt.nil?
-      @step = step.call(workflow: self) until @step.nil?
+      @step = step.call(workflow: self) while @step
     end
 
     # Stop the workflow.
@@ -51,7 +51,7 @@ module Autoflux
     def to_h
       {
         id: id,
-        step: step.class.name
+        step: step.name
       }
     end
   end

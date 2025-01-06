@@ -1,0 +1,36 @@
+module Autoflux
+  interface _Step
+    def name: () -> String
+    def call: (workflow: Workflow) -> untyped
+  end
+
+  module Step
+    # The Step::Base is abstract class to represent the interface of the state
+    class Base
+      include Autoflux::_Step
+    end
+
+    # The Start step is used to start the workflow.
+    class Start < Base
+    end
+
+    # The Stop step is used to stop the workflow.
+    class Stop < Base
+    end
+
+    # The Assistant state is used to call the agent.
+    class Assistant < Base
+      OUTPUT_ROLE_NAME: "assistant"
+    end
+
+    # The Tool state is used to call the tools provided by the agent.
+    class Tool < Base
+      def run: (workflow: Workflow, tool: untyped) -> untyped
+    end
+
+    # The Command step is used to get the user input.
+    class Command < Base
+      EXIT_COMMAND: "exit"
+    end
+  end
+end
