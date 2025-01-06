@@ -1,0 +1,20 @@
+module Autoflux
+  # The Tool is a abstract class to represent the adapter of tools which can be used by the Language Model.
+  class Tool
+    @name: untyped
+
+    @description: untyped
+
+    @parameters: untyped
+
+    attr_reader name: untyped
+
+    attr_reader description: untyped
+
+    attr_reader parameters: untyped
+
+    def initialize: (name: untyped, description: untyped, ?parameters: untyped?) -> void
+
+    def call: (**untyped) -> untyped
+  end
+end

@@ -1,0 +1,10 @@
+module Autoflux
+  module Step
+    # The Assistant state is used to call the agent.
+    class Assistant < Base
+      OUTPUT_ROLE_NAME: "assistant"
+
+      def call: (workflow: untyped) -> untyped
+    end
+  end
+end

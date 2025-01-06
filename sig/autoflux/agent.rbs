@@ -1,0 +1,18 @@
+module Autoflux
+  # The Agent is a abstract class to represent the adapter of the Language Model.
+  class Agent
+    @_tools: untyped
+
+    # @rbs tools: Array<Tool>
+    def initialize: (?tools: untyped) -> void
+
+    # @rbs name: String
+    def tool?: (untyped name) -> bool
+
+    # @rbs name: String
+    def tool: (String name) -> Tool
+
+    # @rbs memory: Memory?
+    def call: (**untyped) -> untyped
+  end
+end

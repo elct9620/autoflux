@@ -23,7 +23,7 @@ module Autoflux
         params = JSON.parse(tool.dig("function", "arguments"), symbolize_names: true)
         return { status: "error", message: "Tool not found" } unless workflow.agent.tool?(name)
 
-        workflow.agent.tool(name).call(**params)
+        workflow.agent.tool(name).call(**params) # steep:ignore
       rescue JSON::ParserError
         { status: "error", message: "Invalid arguments" }
       end

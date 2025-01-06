@@ -1,0 +1,23 @@
+module Autoflux
+  # The Memory is a class to store the memory of the workflow.
+  class Memory
+    @data: untyped
+
+    @verbose: untyped
+
+    attr_reader data: untyped
+
+    attr_reader verbose: untyped
+
+    # @rbs data: Array[Hash]
+    def initialize: (?data: untyped, ?verbose: bool) -> void
+
+    # Push the data to the memory.
+    #
+    # @rbs data: Hash
+    def push: (untyped data) -> untyped
+
+    # Get the last data from the memory.
+    def last: () -> untyped
+  end
+end

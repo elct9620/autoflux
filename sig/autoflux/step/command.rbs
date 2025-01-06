@@ -1,0 +1,10 @@
+module Autoflux
+  module Step
+    # The Command step is used to get the user input.
+    class Command < Base
+      EXIT_COMMAND: "exit"
+
+      def call: (workflow: untyped) -> untyped
+    end
+  end
+end
