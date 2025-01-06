@@ -27,12 +27,12 @@ Autoflux provides a default state machine for a chat workflow.
 ```mermaid
 stateDiagram-v2
     [*] --> Start
-    Start --> User
-    User --> Assistant
-    Assistant --> User
-    Assistant --> Tools
-    Tools --> Assistant
-    User --> Stop
+    Start --> Command
+    Command --> Assistant
+    Assistant --> Command
+    Assistant --> Tool
+    Tool --> Assistant
+    Command --> Stop
     Stop --> [*]
 ```
 
