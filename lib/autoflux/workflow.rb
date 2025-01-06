@@ -10,7 +10,7 @@ module Autoflux
       #
       # @return [String]
       def next_id
-        return SecureRandom.uuid_v7 if RUBY_VERSION >= "3.0" # steep:ignore
+        return SecureRandom.uuid_v7 if RUBY_VERSION >= "3.3" # steep:ignore
 
         SecureRandom.uuid
       end
