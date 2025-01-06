@@ -15,6 +15,33 @@ RSpec.describe Autoflux::Workflow do
     end
   end
 
+  it { is_expected.to have_attributes(id: a_string_matching(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)) }
+
+  describe "#step" do
+    subject { workflow.step }
+
+    it { is_expected.to be_a(Autoflux::Step::Start) }
+
+    context "when the step is nil" do
+      let(:step) { nil }
+
+      it { is_expected.to be_a(Autoflux::Step::Stop) }
+    end
+  end
+
+  describe "#to_h" do
+    subject(:to_h) { workflow.to_h }
+    let(:workflow) { described_class.new(id: "custom-id", agent: agent, io: io, step: step) }
+
+    it { is_expected.to include(id: "custom-id", step: "Autoflux::Step::Start") }
+
+    context "when the step is nil" do
+      let(:step) { nil }
+
+      it { is_expected.to include(id: "custom-id", step: "Autoflux::Step::Stop") }
+    end
+  end
+
   describe "#run" do
     subject(:run) { workflow.run }
 
