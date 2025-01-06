@@ -3,13 +3,13 @@
 module Autoflux
   # The workflow is a state machine to manage the flow of agentic AI.
   class Workflow
-    attr_reader :agent, :state, :memory, :io
+    attr_reader :agent, :step, :memory, :io
 
     # @rbs state: State
-    def initialize(agent:, io:, state: Start.new, memory: Memory.new)
+    def initialize(agent:, io:, step: Start.new, memory: Memory.new)
       @agent = agent
       @io = io
-      @state = state
+      @step = step
       @memory = memory
     end
 
@@ -18,7 +18,7 @@ module Autoflux
     # @rbs system_prompt: String?
     def run(system_prompt: nil)
       memory.push(role: :system, content: system_prompt) unless system_prompt.nil?
-      @state = @state.call(workflow: self) until @state.nil?
+      @step = step.call(workflow: self) until step.nil?
     end
   end
 end
