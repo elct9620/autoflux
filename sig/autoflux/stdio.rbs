@@ -1,21 +1,14 @@
 module Autoflux
   # The Stdio is a class to represent the standard input/output.
   class Stdio < IO
-    @input: untyped
+    include _IO
 
-    @output: untyped
+    @input: ::IO
+    @output: ::IO
+    @prompt: String?
 
-    @prompt: untyped
+    attr_accessor prompt: String?
 
-    attr_accessor prompt: untyped
-
-    # @rbs input: IO
-    # @rbs output: IO
-    def initialize: (?input: untyped, ?output: untyped, ?prompt: untyped?) -> void
-
-    def read: () -> untyped
-
-    # @rbs data: String
-    def write: (untyped data) -> untyped
+    def initialize: (?input: IO, ?output: IO, ?prompt: String?) -> void
   end
 end

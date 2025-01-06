@@ -18,7 +18,7 @@ module Autoflux
 
     def read
       print prompt if prompt
-      @input.gets.chomp
+      @input.gets&.chomp
     end
 
     # @rbs data: String

@@ -8,6 +8,7 @@ module Autoflux
 
       def call(workflow:)
         input = workflow.io.read
+        return Stop.new if input.nil?
         return Stop.new if input == EXIT_COMMAND
 
         workflow.memory.push(role: :user, content: input)

@@ -73,6 +73,21 @@ RSpec.describe Autoflux::Workflow do
       it { expect { run }.to raise_error(NotImplementedError) }
     end
 
+    context "when input is EOF" do
+      let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
+
+      it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
+      it do
+        expect { run }
+          .to change(workflow.memory, :data)
+          .from([])
+          .to([
+                { role: :user, content: "Hello" },
+                { "role" => "assistant", "content" => "Hello, I am a helpful assistant" }
+              ])
+      end
+    end
+
     context "when the agent returns non-exist tools" do
       before do
         allow(agent).to receive(:call).and_return(
