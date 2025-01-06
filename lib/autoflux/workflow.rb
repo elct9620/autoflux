@@ -35,6 +35,11 @@ module Autoflux
       @step = step.call(workflow: self) until @step.nil?
     end
 
+    # Stop the workflow.
+    def stop
+      @step = Step::Stop.new
+    end
+
     # Get the current step. If the step is nil, return a Stop step.
     def step
       @step || Step::Stop.new

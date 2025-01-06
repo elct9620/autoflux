@@ -44,6 +44,17 @@ RSpec.describe Autoflux::Workflow do
     end
   end
 
+  describe "#stop" do
+    subject(:stop) { workflow.stop }
+
+    it do
+      expect { stop }
+        .to change(workflow, :step)
+        .from(an_instance_of(Autoflux::Step::Start))
+        .to(an_instance_of(Autoflux::Step::Stop))
+    end
+  end
+
   describe "#run" do
     subject(:run) { workflow.run }
 
