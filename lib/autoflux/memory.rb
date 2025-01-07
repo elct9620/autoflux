@@ -15,9 +15,9 @@ module Autoflux
     # Push the data to the memory.
     #
     # @rbs data: Hash
-    def push(data)
-      puts JSON.pretty_generate(data) if verbose
-      @data.push(data)
+    def push(event)
+      puts JSON.pretty_generate(event) if verbose
+      @data.push(event)
     end
 
     # Get the last data from the memory.

@@ -1,6 +1,6 @@
 module Autoflux
   interface _IO
     def read: () -> String?
-    def write: (String data) -> untyped
+    def write: (String? data) -> untyped
   end
 end

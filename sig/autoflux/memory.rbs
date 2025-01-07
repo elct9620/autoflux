@@ -1,20 +1,20 @@
 module Autoflux
   interface _Memory
-    def data: () -> Array[untyped]
-    def push: (untyped data) -> untyped
-    def last: () -> untyped
+    def data: () -> Array[_Event]
+    def push: (_Event event) -> void
+    def last: () -> _Event
   end
 
   # The Memory is a class to store the memory of the workflow.
   class Memory
     include _Memory
 
-    @data: Array[untyped]
+    @data: Array[_Event]
     @verbose: bool
 
     attr_reader verbose: bool
 
     # @rbs data: Array[Hash]
-    def initialize: (?data: Array[untyped], ?verbose: bool) -> void
+    def initialize: (?data: Array[_Event], ?verbose: bool) -> void
   end
 end

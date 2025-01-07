@@ -13,7 +13,7 @@ module Autoflux
         return Stop.new if input.nil?
         return Stop.new if input == EXIT_COMMAND
 
-        workflow.memory.push(role: :user, content: input)
+        workflow.memory.push(Event.new(role: "user", content: input))
         Assistant.new
       end
     end

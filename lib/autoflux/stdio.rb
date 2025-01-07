@@ -21,7 +21,7 @@ module Autoflux
 
     # @rbs data: String
     def write(data)
-      @output.puts(data)
+      @output.puts(data) if data
     end
   end
 end
