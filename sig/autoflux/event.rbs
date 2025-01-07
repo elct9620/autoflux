@@ -1,39 +1,25 @@
 module Autoflux
   type jsonString = String
 
-  interface _Invocation
-    def id: () -> String
-    def name: () -> String
-    def args: () -> jsonString
-  end
+  type invocation = {
+    id: String,
+    name: String,
+    args: jsonString
+  }
 
-  interface _Event
-    include ::_ToJson
+  type eventRole = "assistant" | "system" | "user" | "tool" | String
+  type baseEvent = {
+    role: eventRole
+  }
+  type textEvent = baseEvent & {
+    content: String
+  }
+  type invocationEvent = baseEvent & {
+    invocations: Array[invocation]
+  }
+  type invocationResultEvent = textEvent & {
+    invocation_id: String
+  }
 
-    def role: () -> String
-    def content: () -> String?
-    def invocations: () -> Array[_Invocation]?
-
-    def invocation_id: () -> String
-
-    def system?: () -> bool
-    def user?: () -> bool
-    def assistant?: () -> bool
-  end
-
-  class Event
-    include _Event
-
-    ROLE_ASSISTANT: "assistant"
-    ROLE_SYSTEM: "system"
-    ROLE_USER: "user"
-
-    def initialize: (role: String, ?content: String?, ?invocations: Array[_Invocation]?, ?invocation_id: String) -> void
-  end
-
-  class Invocation
-    include _Invocation
-
-    def initialize: (id: String, name: String, ?args: jsonString) -> void
-  end
+  type event = textEvent | invocationEvent | invocationResultEvent
 end

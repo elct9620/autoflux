@@ -7,14 +7,17 @@ module Autoflux
       def name = self.class.name || "Tool"
 
       def call(workflow:)
-        workflow.memory.last.invocations&.each do |invocation|
-          workflow.memory.push(
-            Event.new(
-              role: "tool",
-              content: run(workflow: workflow, invocation: invocation).to_json,
-              invocation_id: invocation.id
-            )
-          )
+        # @type var event: Autoflux::invocationEvent
+        event = workflow.memory.last
+        event[:invocations]&.each do |invocation|
+          # @type: var invocation: Autoflux::invocation
+          # @type: var event: Autoflux::invocationResultEvent
+          event = {
+            role: ROLE_TOOL,
+            content: run(workflow: workflow, invocation: invocation).to_json,
+            invocation_id: invocation[:id]
+          }
+          workflow.memory.push(event)
         end
 
         Assistant.new
@@ -23,8 +26,8 @@ module Autoflux
       protected
 
       def run(workflow:, invocation:)
-        name = invocation.name
-        params = JSON.parse(invocation.args, symbolize_names: true)
+        name = invocation[:name]
+        params = JSON.parse(invocation[:args], symbolize_names: true)
         return { status: "error", message: "Tool not found" } unless workflow.agent.tool?(name)
 
         workflow.agent.tool(name)&.call(workflow: workflow, params: params)

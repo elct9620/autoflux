@@ -3,6 +3,6 @@ module Autoflux
   interface _Agent
     def tool?: (String name) -> bool
     def tool: (String name) -> _Tool?
-    def call: (memory: _Memory) -> _Event
+    def call: (memory: _Memory) -> event
   end
 end

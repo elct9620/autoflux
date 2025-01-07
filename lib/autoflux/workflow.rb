@@ -43,7 +43,11 @@ module Autoflux
     #
     # @rbs system_prompt: String?
     def run(system_prompt: nil, &block)
-      memory.push(Event.new(role: "system", content: system_prompt)) unless system_prompt.nil?
+      if system_prompt
+        # @type var event: Autoflux::event
+        event = { role: ROLE_SYSTEM, content: system_prompt }
+        memory.push(event)
+      end
 
       each(&block || ->(_workflow) {})
     end

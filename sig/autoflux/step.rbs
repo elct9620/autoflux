@@ -24,7 +24,7 @@ module Autoflux
     # The Tool state is used to call the tools provided by the agent.
     class Tool
       include Autoflux::_Step
-      def run: (workflow: Workflow, invocation: _Invocation) -> untyped
+      def run: (workflow: Workflow, invocation: invocation) -> ::_ToJson
     end
 
     # The Command step is used to get the user input.

@@ -9,9 +9,13 @@ module Autoflux
       def call(workflow:)
         event = workflow.agent.call(memory: workflow.memory)
         workflow.memory.push(event)
-        return Tool.new if event&.invocations&.any?
 
-        workflow.io.write(event.content) if event.assistant?
+        # @type var invocation_event: Autoflux::invocationEvent
+        invocation_event = event
+        return Tool.new if invocation_event[:invocations]&.any?
+
+        # @type var event: Autoflux::textEvent
+        workflow.io.write(event[:content]) if event[:role] == ROLE_ASSISTANT
 
         Command.new
       end

@@ -13,7 +13,9 @@ module Autoflux
         return Stop.new if input.nil?
         return Stop.new if input == EXIT_COMMAND
 
-        workflow.memory.push(Event.new(role: "user", content: input))
+        # @type var event: Autoflux::event
+        event = { role: ROLE_USER, content: input }
+        workflow.memory.push(event)
         Assistant.new
       end
     end

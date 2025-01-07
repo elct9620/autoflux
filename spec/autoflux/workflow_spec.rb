@@ -12,7 +12,7 @@ RSpec.describe Autoflux::Workflow do
       def tool(_name) = nil
 
       def call(**)
-        Autoflux::Event.new(role: "assistant", content: "Hello, I am a helpful assistant")
+        { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
       end
     end
   end
@@ -120,8 +120,8 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow.memory, :data)
           .from([])
           .to([
-                have_attributes(role: "user", content: "Hello"),
-                have_attributes(role: "assistant", content: "Hello, I am a helpful assistant")
+                { role: "user", content: "Hello" },
+                { role: "assistant", content: "Hello, I am a helpful assistant" }
               ])
       end
     end
@@ -129,10 +129,8 @@ RSpec.describe Autoflux::Workflow do
     context "when the agent returns non-exist tools" do
       before do
         allow(agent).to receive(:call).and_return(
-          Autoflux::Event.new(role: "assistant",
-                              invocations: [Autoflux::Invocation.new(id: "dummy-id",
-                                                                     name: "dummy")]),
-          Autoflux::Event.new(role: "assistant", content: "Hello, I am a helpful assistant")
+          { role: Autoflux::ROLE_ASSISTANT, invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
+          { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
         )
       end
 
@@ -141,13 +139,10 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow.memory, :data)
           .from([])
           .to([
-                have_attributes(role: "user", content: "Hello"),
-                have_attributes(role: "assistant",
-                                invocations: [have_attributes(id: "dummy-id",
-                                                              name: "dummy", args: "{}")]),
-                have_attributes(role: "tool", content: '{"status":"error","message":"Tool not found"}',
-                                invocation_id: "dummy-id"),
-                have_attributes(role: "assistant", content: "Hello, I am a helpful assistant")
+                { role: "user", content: "Hello" },
+                { role: "assistant", invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
+                { role: "tool", content: '{"status":"error","message":"Tool not found"}', invocation_id: "dummy-id" },
+                { role: "assistant", content: "Hello, I am a helpful assistant" }
               ])
       end
     end
@@ -155,10 +150,8 @@ RSpec.describe Autoflux::Workflow do
     context "when the agent runs tools" do
       before do
         allow(agent).to receive(:call).and_return(
-          Autoflux::Event.new(role: "assistant",
-                              invocations: [Autoflux::Invocation.new(id: "dummy-id",
-                                                                     name: "dummy")]),
-          Autoflux::Event.new(role: "assistant", content: "Hello, I am a helpful assistant")
+          { role: Autoflux::ROLE_ASSISTANT, invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
+          { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
         )
 
         allow(agent).to receive(:tool?).with("dummy").and_return(true)
@@ -176,13 +169,11 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow.memory, :data)
           .from([])
           .to([
-                have_attributes(role: "user", content: "Hello"),
-                have_attributes(role: "assistant",
-                                invocations: [have_attributes(id: "dummy-id",
-                                                              name: "dummy", args: "{}")]),
-                have_attributes(role: "tool", content: '{"status":"success","message":"Hello, I am a dummy tool"}',
-                                invocation_id: "dummy-id"),
-                have_attributes(role: "assistant", content: "Hello, I am a helpful assistant")
+                { role: "user", content: "Hello" },
+                { role: "assistant", invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
+                { role: "tool", content: '{"status":"success","message":"Hello, I am a dummy tool"}',
+                  invocation_id: "dummy-id" },
+                { role: "assistant", content: "Hello, I am a helpful assistant" }
               ])
       end
     end
@@ -196,9 +187,9 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow.memory, :data)
           .from([])
           .to([
-                have_attributes(role: "system", content: "Hello, I am a helpful assistant"),
-                have_attributes(role: "user", content: "Hello"),
-                have_attributes(role: "assistant", content: "Hello, I am a helpful assistant")
+                { role: "system", content: "Hello, I am a helpful assistant" },
+                { role: "user", content: "Hello" },
+                { role: "assistant", content: "Hello, I am a helpful assistant" }
               ])
       end
 
