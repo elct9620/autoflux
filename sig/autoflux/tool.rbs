@@ -4,6 +4,6 @@ module Autoflux
     def description: () -> String
     def parameters: () -> untyped
 
-    def call: (**untyped) -> untyped
+    def call: (workflow: Workflow, params: untyped) -> untyped
   end
 end
