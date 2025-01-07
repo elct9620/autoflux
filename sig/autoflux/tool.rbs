@@ -6,15 +6,4 @@ module Autoflux
 
     def call: (**untyped) -> untyped
   end
-
-  # The Tool is a abstract class to represent the adapter of tools which can be used by the Language Model.
-  class Tool
-    include _Tool
-
-    @name: String
-    @description: String
-    @parameters: untyped
-
-    def initialize: (name: String, description: String, ?parameters: untyped?) -> void
-  end
 end
