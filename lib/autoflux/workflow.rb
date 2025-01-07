@@ -68,7 +68,7 @@ module Autoflux
     def to_h
       {
         id: id,
-        step: step.name
+        step: step.to_s
       }
     end
   end

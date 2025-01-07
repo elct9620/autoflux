@@ -6,7 +6,7 @@ module Autoflux
     class Command
       EXIT_COMMAND = "exit"
 
-      def name = self.class.name || "Command"
+      def to_s = self.class.name || "Command"
 
       def call(workflow:)
         input = workflow.io.read

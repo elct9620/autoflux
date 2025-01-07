@@ -4,7 +4,7 @@ module Autoflux
   module Step
     # The Tool state is used to call the tools provided by the agent.
     class Tool
-      def name = self.class.name || "Tool"
+      def to_s = self.class.name || "Tool"
 
       def call(workflow:)
         # @type var event: Autoflux::invocationEvent

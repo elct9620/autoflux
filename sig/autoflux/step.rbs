@@ -1,6 +1,6 @@
 module Autoflux
   interface _Step
-    def name: () -> String
+    def to_s: () -> String
     def call: (workflow: Workflow) -> untyped
   end
 
