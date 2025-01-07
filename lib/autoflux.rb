@@ -8,7 +8,6 @@ module Autoflux
 
   require_relative "autoflux/tool"
   require_relative "autoflux/agent"
-  require_relative "autoflux/io"
   require_relative "autoflux/memory"
   require_relative "autoflux/step"
   require_relative "autoflux/workflow"

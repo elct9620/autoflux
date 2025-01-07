@@ -1,6 +1,6 @@
 module Autoflux
   # The Stdio is a class to represent the standard input/output.
-  class Stdio < IO
+  class Stdio
     include _IO
 
     @input: ::IO

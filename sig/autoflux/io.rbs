@@ -3,9 +3,4 @@ module Autoflux
     def read: () -> String?
     def write: (String data) -> untyped
   end
-
-  # The IO is abstract class to represent the interface of the IO
-  class IO
-    include _IO
-  end
 end
