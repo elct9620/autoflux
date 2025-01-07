@@ -57,14 +57,14 @@ When receive "exit" from the user, the workflow transition to the stop state.
 
 ### Agent
 
-The agent is an adapter to the LLM model. You can inherit the `Autoflux::Agent` class to implement your own agent.
+The agent is an adapter to the LLM model.
 
 ```ruby
 # :nodoc:
-class OpenAIAgent < Autoflux::Agent
+class OpenAIAgent
   attr_reader :client, :model
 
-  def initialize(client:, tools: [], model: 'gpt-4o-mini')
+  def initialize(client:, model: 'gpt-4o-mini')
     super(tools: tools)
     @client = client
     @model = model
@@ -75,64 +75,54 @@ class OpenAIAgent < Autoflux::Agent
       parameters: {
         model: model,
         messages: memory.data,
-        tools: tools
       }
     ).dig('choices', 0, 'message')
   end
 
-  def tools
-    @tools ||= @_tools.map do |tool|
-      {
-        type: :function,
-        function: {
-          name: tool.name,
-          description: tool.description,
-          parameters: tool.parameters
-        }
-      }
-    end
-  end
+  # If allow to use the tool, return tool object implements `Autoflux::_Tool` interface
+  def tools?(name) = false
+  def tool(name) = nil
 end
 ```
 
-The memory is chat history which keep in the workflow. You can decide to use it or not.
+The memory is history which keep in the workflow. You can decide to use it or not.
 
 ### Tool
 
-The tool is a function that can be used in the agent's response. You can inherit the `Autoflux::Tool` class to implement your own tool.
+The tool is a function that can be used in the agent's response.
 
 ```ruby
 # :nodoc:
-class AddToCartTool < Autoflux::Tool
+class AddToCartTool
+  attr_reader :name, :description, :parameters
+
   def initialize # rubocop:disable Metrics/MethodLength
-    super(
-      name: 'add_to_cart',
-      description: 'Add the product to the cart',
-      parameters: {
-        type: 'object',
-        properties: {
-          name: { type: 'string', description: 'The name of the product' },
-          quantity: { type: 'number', description: 'The quantity of the product' }
-        }
+    @name = 'add_to_cart'
+    @description = 'Add the product to the cart'
+    @parameters = {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'The name of the product' },
+        quantity: { type: 'number', description: 'The quantity of the product' }
       }
-    )
+    }
   end
 
-  def call(name:, quantity:, **)
-    { success: true, content: "Added #{quantity} #{name} to the cart" }
+  def call(workflow:, params:)
+    { success: true, content: "Added #{params[:quantity]} #{params[:name]} to the cart" }
   end
 end
 ```
 
-The tool is require the name and description. The parameters is optional.
+> You can define how to tell the agent to use the tool by adding `name` and `description` to the tool.
 
 ### IO
 
-The IO is an adapter to the input and output. You can inherit the `Autoflux::IO` class to implement your own IO.
+The IO is an adapter to the input and output.
 
 ```ruby
 # :nodoc:
-class ConsoleIO < Autoflux::IO
+class ConsoleIO
   def read
     print 'User: '
     gets.chomp
@@ -147,6 +137,8 @@ end
 The default `Autoflux::Stdio` implement the minimal Standard I/O support.
 
 ```ruby
+require 'autoflux/stdio'
+
 workflow = Autoflux::Workflow.new(
     agent: agent,
     io: Autoflux::Stdio.new(prompt: '> ')

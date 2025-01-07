@@ -1,9 +1,5 @@
 module Autoflux
   interface _Tool
-    def name: () -> String
-    def description: () -> String
-    def parameters: () -> untyped
-
     def call: (workflow: Workflow, params: untyped) -> untyped
   end
 end
