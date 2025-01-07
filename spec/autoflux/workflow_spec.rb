@@ -47,7 +47,7 @@ RSpec.describe Autoflux::Workflow do
   describe "#stop" do
     subject(:stop) { workflow.stop }
 
-    it do
+    it "is expected to stopped" do
       expect { stop }
         .to change(workflow, :step)
         .from(an_instance_of(Autoflux::Step::Start))
@@ -60,14 +60,14 @@ RSpec.describe Autoflux::Workflow do
 
     it { is_expected.to be_an(Enumerator) }
 
-    it do
+    it "is expected to step in 2 step" do
       expect { each.take(2) }
         .to change { workflow.step }
         .from(an_instance_of(Autoflux::Step::Start))
         .to(an_instance_of(Autoflux::Step::Command))
     end
 
-    it do
+    it "is expected to run all steps" do
       expect(each.map(&:step))
         .to contain_exactly(
           an_instance_of(Autoflux::Step::Start),
@@ -84,7 +84,7 @@ RSpec.describe Autoflux::Workflow do
 
     it { is_expected.to be_an(Enumerator) }
 
-    it do
+    it "is expected to step in 2 step" do
       expect { to_enum.take(2) }
         .to change { workflow.step }
         .from(an_instance_of(Autoflux::Step::Start))
@@ -113,7 +113,7 @@ RSpec.describe Autoflux::Workflow do
     context "when run with a block" do
       subject(:run) { workflow.run(&:stop) }
 
-      it do
+      it "is expected to control workflow when running" do
         expect { run }
           .to change(workflow, :step)
           .from(an_instance_of(Autoflux::Step::Start))
@@ -125,7 +125,7 @@ RSpec.describe Autoflux::Workflow do
       let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
 
       it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
-      it do
+      it "is expected to stopped when input reach EOF" do
         expect { run }
           .to change(workflow.memory, :data)
           .from([])
@@ -145,7 +145,7 @@ RSpec.describe Autoflux::Workflow do
         )
       end
 
-      it do
+      it "is expected to see tool not found message" do
         expect { run }
           .to change(workflow.memory, :data)
           .from([])
@@ -179,7 +179,7 @@ RSpec.describe Autoflux::Workflow do
         )
       end
 
-      it do
+      it "is expected to call the tool" do
         expect { run }
           .to change(workflow.memory, :data)
           .from([])
@@ -198,7 +198,7 @@ RSpec.describe Autoflux::Workflow do
       subject(:run) { workflow.run(system_prompt: system_prompt) }
       let(:system_prompt) { "Hello, I am a helpful assistant" }
 
-      it do
+      it "is expected to add system prompt" do
         expect { run }
           .to change(workflow.memory, :data)
           .from([])
