@@ -71,17 +71,55 @@ class OpenAIAgent
   end
 
   def call(memory:)
-    client.chat(
+    msg = client.chat(
       parameters: {
         model: model,
-        messages: memory.data,
+        messages: memory.data.map { |event| convert_message(event) },
       }
     ).dig('choices', 0, 'message')
+
+    convert_event(msg)
   end
 
   # If allow to use the tool, return tool object implements `Autoflux::_Tool` interface
   def tools?(name) = false
   def tool(name) = nil
+
+  # Autoflux use a generic event object to represent the message, you have to convert it to the model's format
+  def convert_message(event)
+    {
+      role: event[:role],
+      content: event[:content]
+    }.tap do |evt|
+      evt[:tool_calls] = event[:invocations]&.map { |invocation| convert_tool_call(invocation) }
+      evt[:tool_call_id] = event[:invocation_id] if event[:invocation_id]
+    end
+  end
+
+  def convert_tool_call(invocation)
+    {
+      type: :function,
+      id: invocation[:id],
+      function: {
+        name: invocation[:name],
+        arguments: invocation[:args]
+      }
+    }
+  end
+
+  def convert_event(msg) # rubocop:disable Metrics/MethodLength
+    {
+      role: msg['role'],
+      content: msg['content'],
+      invocations: msg['tool_calls']&.map do |call|
+        {
+          id: call['id'],
+          name: call.dig('function', 'name'),
+          args: call.dig('function', 'arguments')
+        }
+      end
+    }
+  end
 end
 ```
 

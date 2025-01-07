@@ -9,7 +9,8 @@ module Autoflux
 
   type eventRole = "assistant" | "system" | "user" | "tool" | String
   type baseEvent = {
-    role: eventRole
+    role: eventRole,
+    raw?: Hash[untyped, untyped]
   }
   type textEvent = baseEvent & {
     content: String
