@@ -3,8 +3,10 @@
 module Autoflux
   module Step
     # The Command step is used to get the user input.
-    class Command < Base
+    class Command
       EXIT_COMMAND = "exit"
+
+      def name = self.class.name || "Command"
 
       def call(workflow:)
         input = workflow.io.read

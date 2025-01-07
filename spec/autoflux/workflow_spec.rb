@@ -97,13 +97,6 @@ RSpec.describe Autoflux::Workflow do
 
     it { is_expected.to be_nil }
 
-    context "when the state is abstract" do
-      let(:workflow) { described_class.new(agent: agent, io: io, step: step) }
-      let(:step) { Autoflux::Step::Base.new }
-
-      it { expect { run }.to raise_error(NotImplementedError) }
-    end
-
     context "when the agent is abstract" do
       let(:agent) { Autoflux::Agent.new }
 

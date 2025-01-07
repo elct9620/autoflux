@@ -3,8 +3,10 @@
 module Autoflux
   module Step
     # The Assistant state is used to call the agent.
-    class Assistant < Base
+    class Assistant
       OUTPUT_ROLE_NAME = "assistant"
+
+      def name = self.class.name || "Assistant"
 
       def call(workflow:)
         res = workflow.agent.call(memory: workflow.memory)

@@ -3,7 +3,8 @@
 module Autoflux
   module Step
     # The Stop step is used to stop the workflow.
-    class Stop < Base
+    class Stop
+      def name = self.class.name || "Stop"
       def call(**) = nil
     end
   end
