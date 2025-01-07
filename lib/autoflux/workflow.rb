@@ -16,6 +16,8 @@ module Autoflux
       end
     end
 
+    include Enumerable
+
     attr_reader :id, :agent, :memory, :io
 
     # @rbs state: State
@@ -27,12 +29,23 @@ module Autoflux
       @memory = memory
     end
 
+    def each
+      return to_enum(:each) unless block_given?
+
+      yield self
+      while @step
+        @step = step.call(workflow: self)
+        yield self if @step
+      end
+    end
+
     # Run the workflow.
     #
     # @rbs system_prompt: String?
-    def run(system_prompt: nil)
+    def run(system_prompt: nil, &block)
       memory.push(role: :system, content: system_prompt) unless system_prompt.nil?
-      @step = step.call(workflow: self) while @step
+
+      each(&block || ->(_workflow) {})
     end
 
     # Stop the workflow.

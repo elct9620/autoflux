@@ -55,6 +55,43 @@ RSpec.describe Autoflux::Workflow do
     end
   end
 
+  describe "#each" do
+    subject(:each) { workflow.each }
+
+    it { is_expected.to be_an(Enumerator) }
+
+    it do
+      expect { each.take(2) }
+        .to change { workflow.step }
+        .from(an_instance_of(Autoflux::Step::Start))
+        .to(an_instance_of(Autoflux::Step::Command))
+    end
+
+    it do
+      expect(each.map(&:step))
+        .to contain_exactly(
+          an_instance_of(Autoflux::Step::Start),
+          an_instance_of(Autoflux::Step::Command),
+          an_instance_of(Autoflux::Step::Assistant),
+          an_instance_of(Autoflux::Step::Command),
+          an_instance_of(Autoflux::Step::Stop)
+        )
+    end
+  end
+
+  describe "#to_enum" do
+    subject(:to_enum) { workflow.to_enum }
+
+    it { is_expected.to be_an(Enumerator) }
+
+    it do
+      expect { to_enum.take(2) }
+        .to change { workflow.step }
+        .from(an_instance_of(Autoflux::Step::Start))
+        .to(an_instance_of(Autoflux::Step::Command))
+    end
+  end
+
   describe "#run" do
     subject(:run) { workflow.run }
 
@@ -71,6 +108,17 @@ RSpec.describe Autoflux::Workflow do
       let(:agent) { Autoflux::Agent.new }
 
       it { expect { run }.to raise_error(NotImplementedError) }
+    end
+
+    context "when run with a block" do
+      subject(:run) { workflow.run(&:stop) }
+
+      it do
+        expect { run }
+          .to change(workflow, :step)
+          .from(an_instance_of(Autoflux::Step::Start))
+          .to(an_instance_of(Autoflux::Step::Stop))
+      end
     end
 
     context "when input is EOF" do
