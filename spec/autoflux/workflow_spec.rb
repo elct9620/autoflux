@@ -7,7 +7,10 @@ RSpec.describe Autoflux::Workflow do
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\nexit")) }
   let(:agent) { dummy_agent.new }
   let(:dummy_agent) do
-    Class.new(Autoflux::Agent) do
+    Class.new do
+      def tool?(_name) = false
+      def tool(_name) = nil
+
       def call(**)
         { "role" => "assistant", "content" => "Hello, I am a helpful assistant" }
       end
@@ -97,12 +100,6 @@ RSpec.describe Autoflux::Workflow do
 
     it { is_expected.to be_nil }
 
-    context "when the agent is abstract" do
-      let(:agent) { Autoflux::Agent.new }
-
-      it { expect { run }.to raise_error(NotImplementedError) }
-    end
-
     context "when run with a block" do
       subject(:run) { workflow.run(&:stop) }
 
@@ -153,22 +150,20 @@ RSpec.describe Autoflux::Workflow do
     end
 
     context "when the agent runs tools" do
-      let(:dummy_tool) do
-        Class.new(Autoflux::Tool) do
-          def call(**)
-            { status: "success", message: "Hello, I am a dummy tool" }
-          end
-        end
-      end
-      let(:agent) do
-        dummy_agent.new(tools: [dummy_tool.new(name: "dummy", description: "A dummy tool")])
-      end
-
       before do
         allow(agent).to receive(:call).and_return(
           { role: :assistant,
             "tool_calls" => [{ "function" => { "name" => "dummy", "arguments" => "{}" }, "id" => "dummy-id" }] },
           { role: :assistant, content: "Hello, I am a helpful assistant" }
+        )
+
+        allow(agent).to receive(:tool?).with("dummy").and_return(true)
+        allow(agent).to receive(:tool).with("dummy").and_return(
+          Class.new do
+            def call(**)
+              { "status" => "success", "message" => "Hello, I am a dummy tool" }
+            end
+          end.new
         )
       end
 

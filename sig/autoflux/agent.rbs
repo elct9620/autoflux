@@ -5,12 +5,4 @@ module Autoflux
     def tool: (String name) -> _Tool?
     def call: (memory: _Memory) -> untyped
   end
-
-  # The Agent is a abstract class to represent the adapter of the Language Model.
-  class Agent
-    include _Agent
-
-    @_tools: Array[_Tool]
-    def initialize: (?tools: Array[_Tool]?) -> void
-  end
 end

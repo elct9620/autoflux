@@ -7,7 +7,6 @@ module Autoflux
   class Error < StandardError; end
 
   require_relative "autoflux/tool"
-  require_relative "autoflux/agent"
   require_relative "autoflux/memory"
   require_relative "autoflux/step"
   require_relative "autoflux/workflow"
