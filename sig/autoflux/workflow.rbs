@@ -18,7 +18,7 @@ module Autoflux
 
     def initialize: (agent: _Agent, io: _IO, ?id: String?, ?step: _Step, ?memory: _Memory) -> void
     def each: { (Workflow) -> void } -> void
-    def run: (?system_prompt: String?) ?{ (Workflow) -> void } -> void
+    def run: () ?{ (Workflow) -> void } -> void
     def stop: () -> void
     def step: () -> _Step
     def to_h: () -> { id: String, step: String }
