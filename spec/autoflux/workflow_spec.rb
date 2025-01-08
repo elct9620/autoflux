@@ -5,17 +5,7 @@ require "autoflux/stdio"
 RSpec.describe Autoflux::Workflow do
   subject(:workflow) { described_class.new(agent: agent, io: io) }
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
-  let(:agent) { dummy_agent.new }
-  let(:dummy_agent) do
-    Class.new do
-      def tool?(_name) = false
-      def tool(_name) = nil
-
-      def call(**)
-        { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
-      end
-    end
-  end
+  let(:agent) { ->(**) { { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" } } }
 
   it { is_expected.to have_attributes(id: a_string_matching(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)) }
 
@@ -75,7 +65,7 @@ RSpec.describe Autoflux::Workflow do
         .to contain_exactly(
           an_instance_of(Autoflux::Step::Start),
           an_instance_of(Autoflux::Step::Command),
-          an_instance_of(Autoflux::Step::Assistant),
+          an_instance_of(Autoflux::Step::Agent),
           an_instance_of(Autoflux::Step::Command),
           an_instance_of(Autoflux::Step::Stop)
         )
@@ -100,6 +90,18 @@ RSpec.describe Autoflux::Workflow do
 
     it { is_expected.to be_nil }
 
+    it "is expected generate events" do
+      expect { run }
+        .to change(workflow, :events)
+        .from([])
+        .to(
+          [
+            { role: Autoflux::ROLE_USER, content: "Hello" },
+            { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
+          ]
+        )
+    end
+
     context "when run with a block" do
       subject(:run) { workflow.run(&:stop) }
 
@@ -108,58 +110,6 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow, :step)
           .from(an_instance_of(Autoflux::Step::Start))
           .to(an_instance_of(Autoflux::Step::Stop))
-      end
-    end
-
-    context "when the agent returns non-exist tools" do
-      before do
-        allow(agent).to receive(:call).and_return(
-          { role: Autoflux::ROLE_ASSISTANT, invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
-          { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
-        )
-      end
-
-      it "is expected to see tool not found message" do
-        expect { run }
-          .to change(workflow, :events)
-          .from([])
-          .to([
-                { role: "user", content: "Hello" },
-                { role: "assistant", invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
-                { role: "tool", content: '{"status":"error","message":"Tool not found"}', invocation_id: "dummy-id" },
-                { role: "assistant", content: "Hello, I am a helpful assistant" }
-              ])
-      end
-    end
-
-    context "when the agent runs tools" do
-      before do
-        allow(agent).to receive(:call).and_return(
-          { role: Autoflux::ROLE_ASSISTANT, invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
-          { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" }
-        )
-
-        allow(agent).to receive(:tool?).with("dummy").and_return(true)
-        allow(agent).to receive(:tool).with("dummy").and_return(
-          Class.new do
-            def call(**)
-              { "status" => "success", "message" => "Hello, I am a dummy tool" }
-            end
-          end.new
-        )
-      end
-
-      it "is expected to call the tool" do
-        expect { run }
-          .to change(workflow, :events)
-          .from([])
-          .to([
-                { role: "user", content: "Hello" },
-                { role: "assistant", invocations: [{ id: "dummy-id", name: "dummy", args: "{}" }] },
-                { role: "tool", content: '{"status":"success","message":"Hello, I am a dummy tool"}',
-                  invocation_id: "dummy-id" },
-                { role: "assistant", content: "Hello, I am a helpful assistant" }
-              ])
       end
     end
   end

@@ -6,7 +6,6 @@ module Autoflux
     require "autoflux/step/start"
     require "autoflux/step/stop"
     require "autoflux/step/command"
-    require "autoflux/step/assistant"
-    require "autoflux/step/tool"
+    require "autoflux/step/agent"
   end
 end

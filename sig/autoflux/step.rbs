@@ -5,32 +5,20 @@ module Autoflux
   end
 
   module Step
-    # The Start step is used to start the workflow.
     class Start
       include Autoflux::_Step
     end
 
-    # The Stop step is used to stop the workflow.
     class Stop
       include Autoflux::_Step
     end
 
-    # The Assistant state is used to call the agent.
-    class Assistant
+    class Agent
       include Autoflux::_Step
-      OUTPUT_ROLE_NAME: "assistant"
     end
 
-    # The Tool state is used to call the tools provided by the agent.
-    class Tool
-      include Autoflux::_Step
-      def run: (workflow: Workflow, invocation: invocation) -> ::_ToJson
-    end
-
-    # The Command step is used to get the user input.
     class Command
       include Autoflux::_Step
-      EXIT_COMMAND: "exit"
     end
   end
 end

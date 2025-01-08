@@ -13,7 +13,7 @@ module Autoflux
         # @type var event: Autoflux::event
         event = { role: ROLE_USER, content: input }
         workflow.apply(event)
-        Assistant.new
+        Agent.new
       end
     end
   end
