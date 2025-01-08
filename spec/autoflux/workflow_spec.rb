@@ -4,7 +4,7 @@ require "autoflux/stdio"
 
 RSpec.describe Autoflux::Workflow do
   subject(:workflow) { described_class.new(agent: agent, io: io) }
-  let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\nexit")) }
+  let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
   let(:agent) { dummy_agent.new }
   let(:dummy_agent) do
     Class.new do
@@ -108,21 +108,6 @@ RSpec.describe Autoflux::Workflow do
           .to change(workflow, :step)
           .from(an_instance_of(Autoflux::Step::Start))
           .to(an_instance_of(Autoflux::Step::Stop))
-      end
-    end
-
-    context "when input is EOF" do
-      let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
-
-      it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
-      it "is expected to stopped when input reach EOF" do
-        expect { run }
-          .to change(workflow, :events)
-          .from([])
-          .to([
-                { role: "user", content: "Hello" },
-                { role: "assistant", content: "Hello, I am a helpful assistant" }
-              ])
       end
     end
 
