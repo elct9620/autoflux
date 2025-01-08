@@ -7,7 +7,7 @@ module Autoflux
       def to_s = self.class.name || "Assistant"
 
       def call(workflow:)
-        event = workflow.agent.call(memory: workflow.memory)
+        event = workflow.agent.call(workflow: workflow)
         workflow.memory.push(event)
 
         # @type var invocation_event: Autoflux::invocationEvent
