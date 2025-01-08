@@ -18,15 +18,15 @@ module Autoflux
 
     include Enumerable
 
-    attr_reader :id, :agent, :events, :io
+    attr_reader :id, :agent, :io
 
     # @rbs state: State
-    def initialize(agent:, io:, id: nil, step: Step::Start.new, events: Memory.new)
+    def initialize(agent:, io:, id: nil, step: Step::Start.new)
       @id = id || Workflow.next_id
       @agent = agent
       @io = io
       @step = step
-      @events = events
+      @events = []
     end
 
     def each
@@ -52,6 +52,14 @@ module Autoflux
     # Get the current step. If the step is nil, return a Stop step.
     def step
       @step || Step::Stop.new
+    end
+
+    def events
+      @events.clone
+    end
+
+    def apply(event)
+      @events.push(event)
     end
 
     # Get the hash representation of the workflow.

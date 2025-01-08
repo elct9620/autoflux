@@ -11,7 +11,6 @@ module Autoflux
   ROLE_TOOL = "tool"
   ROLE_USER = "user"
 
-  require_relative "autoflux/memory"
   require_relative "autoflux/step"
   require_relative "autoflux/workflow"
 end

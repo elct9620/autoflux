@@ -17,7 +17,7 @@ module Autoflux
             content: run(workflow: workflow, invocation: invocation).to_json,
             invocation_id: invocation[:id]
           }
-          workflow.events.push(event)
+          workflow.apply(event)
         end
 
         Assistant.new

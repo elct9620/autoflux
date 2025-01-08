@@ -8,7 +8,7 @@ module Autoflux
 
       def call(workflow:)
         event = workflow.agent.call(workflow: workflow)
-        workflow.events.push(event)
+        workflow.apply(event)
 
         # @type var invocation_event: Autoflux::invocationEvent
         invocation_event = event
