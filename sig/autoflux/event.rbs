@@ -1,27 +1,14 @@
 module Autoflux
-  type jsonString = String
+  type eventType = :command | :agent | Symbol
+  module EventType
+    COMMAND: eventType & "command"
+    AGENT: eventType & "agent"
+  end
 
-  type invocation = {
-    id: String,
-    name: String,
-    args: jsonString
-  }
-
-  type eventRole = "assistant" | "system" | "user" | "tool" | String
-  type baseEvent = {
-    role: eventRole,
+  type event = {
+    id?: String,
     agent_id?: String,
-    raw?: Hash[untyped, untyped]
+    type: eventType,
+    payload: ::_ToJson,
   }
-  type textEvent = baseEvent & {
-    content: String
-  }
-  type invocationEvent = baseEvent & {
-    invocations: Array[invocation]
-  }
-  type invocationResultEvent = textEvent & {
-    invocation_id: String
-  }
-
-  type event = textEvent | invocationEvent | invocationResultEvent
 end

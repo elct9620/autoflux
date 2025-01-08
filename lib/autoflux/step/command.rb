@@ -10,8 +10,8 @@ module Autoflux
         input = workflow.io.read
         return Stop.new if input.nil?
 
-        # @type var event: Autoflux::event
-        event = { role: ROLE_USER, content: input }
+        # @type var event: event
+        event = { type: Autoflux::EventType::COMMAND, payload: input }
         workflow.apply(event)
         Agent.new
       end

@@ -1,11 +1,6 @@
 module Autoflux
   VERSION: String
 
-  ROLE_SYSTEM: eventRole & "system"
-  ROLE_USER: eventRole & "user"
-  ROLE_TOOL: eventRole & "tool"
-  ROLE_ASSISTANT: eventRole & "assistant"
-
   class Error < StandardError
   end
 end
