@@ -59,6 +59,8 @@ module Autoflux
     end
 
     def apply(event)
+      # @type var event: event
+      event = event.freeze
       @events.push(event)
     end
 
