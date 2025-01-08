@@ -13,7 +13,7 @@ module Autoflux
         # @type var event: event
         event = { type: Autoflux::EventType::COMMAND, payload: input }
         workflow.apply(event)
-        Agent.new
+        Agent.new(prompt: input)
       end
     end
   end

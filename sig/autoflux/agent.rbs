@@ -1,6 +1,6 @@
 module Autoflux
   # Agent implements the _Agent interface.
   interface _Agent
-    def call: (workflow: Workflow) -> void
+    def call: (String? prompt, workflow: Workflow) -> void
   end
 end

@@ -15,6 +15,10 @@ module Autoflux
 
     class Agent
       include Autoflux::_Step
+
+      attr_reader prompt: String?
+
+      def initialize: (?prompt: String) -> void
     end
 
     class Command
