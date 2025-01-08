@@ -1,5 +1,0 @@
-module Autoflux
-  interface _Tool
-    def call: (workflow: Workflow, params: untyped) -> untyped
-  end
-end

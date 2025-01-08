@@ -26,7 +26,6 @@ module Autoflux
       @agent = agent
       @io = io
       @step = step
-      @events = []
     end
 
     def each
@@ -52,16 +51,6 @@ module Autoflux
     # Get the current step. If the step is nil, return a Stop step.
     def step
       @step || Step::Stop.new
-    end
-
-    def events
-      @events.clone
-    end
-
-    def apply(event)
-      # @type var event: event
-      event = event.freeze
-      @events.push(event)
     end
 
     # Get the hash representation of the workflow.

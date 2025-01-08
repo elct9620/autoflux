@@ -7,7 +7,7 @@ RSpec.describe Autoflux::Workflow do
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
   let(:agent) do
     lambda { |prompt, workflow:|
-      workflow.apply(type: Autoflux::EventType::AGENT, payload: "#{prompt}, I am a helpful assistant")
+      workflow.io.write("#{prompt}, I am a helpful assistant")
     }
   end
 
@@ -93,18 +93,7 @@ RSpec.describe Autoflux::Workflow do
     subject(:run) { workflow.run }
 
     it { is_expected.to be_nil }
-
-    it "is expected generate events" do
-      expect { run }
-        .to change(workflow, :events)
-        .from([])
-        .to(
-          [
-            { type: Autoflux::EventType::COMMAND, payload: "Hello" },
-            { type: Autoflux::EventType::AGENT, payload: "Hello, I am a helpful assistant" }
-          ]
-        )
-    end
+    it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
 
     context "when run with a block" do
       subject(:run) { workflow.run(&:stop) }
