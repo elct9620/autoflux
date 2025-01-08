@@ -117,7 +117,7 @@ RSpec.describe Autoflux::Workflow do
       it { expect { run }.to output("Hello, I am a helpful assistant\n").to_stdout }
       it "is expected to stopped when input reach EOF" do
         expect { run }
-          .to change(workflow.memory, :data)
+          .to change(workflow.events, :data)
           .from([])
           .to([
                 { role: "user", content: "Hello" },
@@ -136,7 +136,7 @@ RSpec.describe Autoflux::Workflow do
 
       it "is expected to see tool not found message" do
         expect { run }
-          .to change(workflow.memory, :data)
+          .to change(workflow.events, :data)
           .from([])
           .to([
                 { role: "user", content: "Hello" },
@@ -166,7 +166,7 @@ RSpec.describe Autoflux::Workflow do
 
       it "is expected to call the tool" do
         expect { run }
-          .to change(workflow.memory, :data)
+          .to change(workflow.events, :data)
           .from([])
           .to([
                 { role: "user", content: "Hello" },

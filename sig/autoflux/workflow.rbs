@@ -7,16 +7,16 @@ module Autoflux
     @agent: _Agent
     @io: _IO
     @step: _Step
-    @memory: _Memory
+    @events: _Memory
 
     def self.next_id: () -> String
 
     attr_reader id: String
     attr_reader agent: _Agent
-    attr_reader memory: _Memory
+    attr_reader events: _Memory
     attr_reader io: _IO
 
-    def initialize: (agent: _Agent, io: _IO, ?id: String?, ?step: _Step, ?memory: _Memory) -> void
+    def initialize: (agent: _Agent, io: _IO, ?id: String?, ?step: _Step, ?events: _Memory) -> void
     def each: { (Workflow) -> void } -> void
     def run: () ?{ (Workflow) -> void } -> void
     def stop: () -> void

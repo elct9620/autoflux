@@ -8,7 +8,7 @@ module Autoflux
 
       def call(workflow:)
         # @type var event: Autoflux::invocationEvent
-        event = workflow.memory.last
+        event = workflow.events.last
         event[:invocations]&.each do |invocation|
           # @type: var invocation: Autoflux::invocation
           # @type: var event: Autoflux::invocationResultEvent
@@ -17,7 +17,7 @@ module Autoflux
             content: run(workflow: workflow, invocation: invocation).to_json,
             invocation_id: invocation[:id]
           }
-          workflow.memory.push(event)
+          workflow.events.push(event)
         end
 
         Assistant.new

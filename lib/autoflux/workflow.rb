@@ -18,15 +18,15 @@ module Autoflux
 
     include Enumerable
 
-    attr_reader :id, :agent, :memory, :io
+    attr_reader :id, :agent, :events, :io
 
     # @rbs state: State
-    def initialize(agent:, io:, id: nil, step: Step::Start.new, memory: Memory.new)
+    def initialize(agent:, io:, id: nil, step: Step::Start.new, events: Memory.new)
       @id = id || Workflow.next_id
       @agent = agent
       @io = io
       @step = step
-      @memory = memory
+      @events = events
     end
 
     def each
