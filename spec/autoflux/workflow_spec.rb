@@ -5,7 +5,9 @@ require "autoflux/stdio"
 RSpec.describe Autoflux::Workflow do
   subject(:workflow) { described_class.new(agent: agent, io: io) }
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
-  let(:agent) { ->(**) { { role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant" } } }
+  let(:agent) do
+    ->(workflow:) { workflow.apply(role: Autoflux::ROLE_ASSISTANT, content: "Hello, I am a helpful assistant") }
+  end
 
   it { is_expected.to have_attributes(id: a_string_matching(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)) }
 

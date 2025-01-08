@@ -7,8 +7,7 @@ module Autoflux
       def to_s = self.class.name || "Agent"
 
       def call(workflow:)
-        event = workflow.agent.call(workflow: workflow)
-        workflow.apply(event)
+        workflow.agent.call(workflow: workflow)
         Command.new
       end
     end
