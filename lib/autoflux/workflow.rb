@@ -31,10 +31,11 @@ module Autoflux
     def each
       return to_enum(:each) unless block_given?
 
-      yield self
-      while @step
+      loop do
+        break unless @step
+
+        yield self
         @step = step.call(workflow: self)
-        yield self if @step
       end
     end
 
