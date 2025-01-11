@@ -28,11 +28,9 @@ Autoflux provides a default state machine for a chat workflow.
 stateDiagram-v2
     [*] --> Start
     Start --> Command
-    Command --> Assistant
-    Assistant --> Command
-    Assistant --> Tool
-    Tool --> Assistant
+    Command --> Agent
     Command --> Stop
+    Agent --> Command
     Stop --> [*]
 ```
 
@@ -47,116 +45,38 @@ workflow = Autoflux::Workflow.new(
 workflow.run
 ```
 
-You can give a system prompt when running the workflow:
-
-```ruby
-workflow.run(system_prompt: 'Help user to solve the problem')
-```
-
-When receive "exit" from the user, the workflow transition to the stop state.
+When the `io` is `EOF`, the workflow will stop.
 
 ### Agent
 
-The agent is an adapter to the LLM model.
+The agent is a interface implements `call` method to process the command.
 
 ```ruby
-# :nodoc:
-class OpenAIAgent
-  attr_reader :client, :model
-
-  def initialize(client:, model: 'gpt-4o-mini')
-    super(tools: tools)
-    @client = client
-    @model = model
+agent = ->(prompt, **context) {
+  case prompt
+  when 'hello'
+    'Hello, how can I help you?'
+  when 'bye'
+    'Goodbye'
+  else
+    'I do not understand'
   end
-
-  def call(memory:)
-    msg = client.chat(
-      parameters: {
-        model: model,
-        messages: memory.data.map { |event| convert_message(event) },
-      }
-    ).dig('choices', 0, 'message')
-
-    convert_event(msg)
-  end
-
-  # If allow to use the tool, return tool object implements `Autoflux::_Tool` interface
-  def tools?(name) = false
-  def tool(name) = nil
-
-  # Autoflux use a generic event object to represent the message, you have to convert it to the model's format
-  def convert_message(event)
-    {
-      role: event[:role],
-      content: event[:content]
-    }.tap do |evt|
-      evt[:tool_calls] = event[:invocations]&.map { |invocation| convert_tool_call(invocation) }
-      evt[:tool_call_id] = event[:invocation_id] if event[:invocation_id]
-    end
-  end
-
-  def convert_tool_call(invocation)
-    {
-      type: :function,
-      id: invocation[:id],
-      function: {
-        name: invocation[:name],
-        arguments: invocation[:args]
-      }
-    }
-  end
-
-  def convert_event(msg) # rubocop:disable Metrics/MethodLength
-    {
-      role: msg['role'],
-      content: msg['content'],
-      invocations: msg['tool_calls']&.map do |call|
-        {
-          id: call['id'],
-          name: call.dig('function', 'name'),
-          args: call.dig('function', 'arguments')
-        }
-      end
-    }
-  end
-end
+}
 ```
 
-The memory is history which keep in the workflow. You can decide to use it or not.
-
-### Tool
-
-The tool is a function that can be used in the agent's response.
+The workflow will pass itself as context to the agent.
 
 ```ruby
-# :nodoc:
-class AddToCartTool
-  attr_reader :name, :description, :parameters
-
-  def initialize # rubocop:disable Metrics/MethodLength
-    @name = 'add_to_cart'
-    @description = 'Add the product to the cart'
-    @parameters = {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'The name of the product' },
-        quantity: { type: 'number', description: 'The quantity of the product' }
-      }
-    }
-  end
-
-  def call(workflow:, params:)
-    { success: true, content: "Added #{params[:quantity]} #{params[:name]} to the cart" }
-  end
-end
+agent = ->(prompt, workflow:, **) {
+    workflow.io.write("User: #{prompt}")
+}
 ```
 
-> You can define how to tell the agent to use the tool by adding `name` and `description` to the tool.
+Workflow never knows the how the agent works and which tool is used.
 
 ### IO
 
-The IO is an adapter to the input and output.
+The IO is an adapter to let the workflow interact with the user.
 
 ```ruby
 # :nodoc:
