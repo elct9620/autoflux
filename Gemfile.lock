@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    autoflux (0.4.0)
+    autoflux (0.5.0)
 
 GEM
   remote: https://rubygems.org/
