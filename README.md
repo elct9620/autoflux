@@ -49,30 +49,47 @@ When the `io` is `EOF`, the workflow will stop.
 
 ### Agent
 
-The agent is a interface implements `call` method to process the command.
+The agent is an object with have `#name` and `#call` methods.
 
 ```ruby
-agent = ->(prompt, **context) {
-  case prompt
-  when 'hello'
-    'Hello, how can I help you?'
-  when 'bye'
-    'Goodbye'
-  else
-    'I do not understand'
-  end
-}
+require 'autoflux/openai'
+
+agent = Autoflux::OpenAI.new(
+    name: "chat",
+    model: "gpt-4o-mini"
+)
 ```
 
 The workflow will pass itself as context to the agent.
 
 ```ruby
-agent = ->(prompt, workflow:, **) {
-    workflow.io.write("User: #{prompt}")
-}
+class MyAgent
+    attr_reader :name
+
+    def initialize(name:)
+      @name = name
+    end
+
+    def call(params, workflow:)
+      workflow.io.write("Hello, #{params[:name]}!")
+    end
+end
+
 ```
 
 Workflow never knows the how the agent works and which tool is used.
+
+The agent can switch by workflow if the workflow knows it. You can use it in the agent's tool to switch the agent.
+
+```ruby
+workflow = Autoflux::Workflow.new(
+    agent: agent1, # if not given the first agent in `agents` will be used
+    agents: [agent1, agent2],
+    io: io,
+)
+
+workflow.switch_agent("agent2")
+```
 
 ### IO
 
