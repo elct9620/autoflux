@@ -6,8 +6,8 @@ RSpec.describe Autoflux::Workflow do
   subject(:workflow) { described_class.new(agent: agent, io: io) }
   let(:io) { Autoflux::Stdio.new(input: StringIO.new("Hello\n")) }
   let(:agent) do
-    lambda { |prompt, workflow:|
-      workflow.io.write("#{prompt}, I am a helpful assistant")
+    lambda { |_prompt, **|
+      { content: "Hello, I am a helpful assistant" }
     }
   end
 

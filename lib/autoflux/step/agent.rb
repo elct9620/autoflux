@@ -13,7 +13,8 @@ module Autoflux
       def to_s = self.class.name || "Agent"
 
       def call(workflow:)
-        workflow.agent.call(prompt, workflow: workflow)
+        res = workflow.agent.call(prompt, workflow: workflow)
+        workflow.io.write(res[:content] || "")
         Command.new
       end
     end
