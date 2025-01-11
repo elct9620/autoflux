@@ -5,6 +5,7 @@ module Autoflux
 
     @id: String
     @agent: _Agent
+    @agents: Array[_Agent]
     @io: _IO
     @step: _Step
 
@@ -12,11 +13,13 @@ module Autoflux
 
     attr_reader id: String
     attr_reader agent: _Agent
+    attr_reader agents: Array[_Agent]
     attr_reader io: _IO
 
-    def initialize: (agent: _Agent, io: _IO, ?id: String?, ?step: _Step) -> void
+    def initialize: (io: _IO, ?agent: _Agent, ?agents: Array[_Agent], ?id: String?, ?step: _Step) -> void
     def each: { (Workflow) -> void } -> void
     def run: () ?{ (Workflow) -> void } -> void
+    def switch_agent: (String name) -> bool
     def stop: () -> void
     def step: () -> _Step
     def to_h: () -> { id: String, step: String }

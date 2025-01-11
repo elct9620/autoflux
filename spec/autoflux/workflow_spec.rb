@@ -13,6 +13,12 @@ RSpec.describe Autoflux::Workflow do
 
   it { is_expected.to have_attributes(id: a_string_matching(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)) }
 
+  context "when the agent is nil" do
+    let(:agent) { nil }
+
+    it { expect { workflow }.to raise_error(Autoflux::Error, "No agent provided") }
+  end
+
   describe "#step" do
     subject { workflow.step }
     let(:workflow) { described_class.new(agent: agent, io: io, step: step) }
@@ -104,6 +110,25 @@ RSpec.describe Autoflux::Workflow do
           .from(an_instance_of(Autoflux::Step::Start))
           .to(an_instance_of(Autoflux::Step::Stop))
       end
+    end
+  end
+
+  describe "#switch_agent" do
+    subject(:switch_agent) { workflow.switch_agent(name) }
+    let(:workflow) { described_class.new(agents: agents, io: io) }
+    let(:name) { "agent2" }
+
+    let(:agents) { [agent, agent2] }
+    let(:agent) { instance_double("Autoflux::OpenAI::Agent", name: "agent") }
+    let(:agent2) { instance_double("Autoflux::OpenAI::Agent", name: "agent2") }
+
+    it { is_expected.to be_truthy }
+    it { expect { switch_agent }.to change(workflow, :agent).from(agent).to(agent2) }
+
+    context "when the agent is not found" do
+      let(:name) { "unknown" }
+
+      it { is_expected.to be_falsey }
     end
   end
 end

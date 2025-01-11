@@ -18,14 +18,17 @@ module Autoflux
 
     include Enumerable
 
-    attr_reader :id, :agent, :io
+    attr_reader :id, :agent, :io, :agents
 
     # @rbs state: State
-    def initialize(agent:, io:, id: nil, step: Step::Start.new)
+    def initialize(io:, agent: nil, agents: [], id: nil, step: Step::Start.new)
       @id = id || Workflow.next_id
-      @agent = agent
+      @agent = agent || agents.first
+      @agents = agents
       @io = io
       @step = step
+
+      raise Error, "No agent provided" unless @agent
     end
 
     def each
@@ -42,6 +45,15 @@ module Autoflux
     # Run the workflow.
     def run(&block)
       each(&block || ->(_workflow) {})
+    end
+
+    # Switch the agent.
+    def switch_agent(name)
+      new_agent = agents.find { |agent| agent.name == name }
+      return false unless new_agent
+
+      @agent = new_agent
+      true
     end
 
     # Stop the workflow.
