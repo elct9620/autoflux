@@ -20,6 +20,10 @@ If bundler is not being used to manage dependencies, install the gem by executin
 gem install autoflux
 ```
 
+## Agent Implementations
+
+* [autoflux-openai](https://github.com/elct9620/autoflux-openai)
+
 ## Usage
 
 Autoflux provides a default state machine for a chat workflow.
