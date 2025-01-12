@@ -54,6 +54,7 @@ GEM
     rbs (3.8.1)
       logger
     regexp_parser (2.9.3)
+    rexml (3.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -85,6 +86,9 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
+    simplecov-cobertura (2.1.0)
+      rexml
+      simplecov (~> 0.19)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
     steep (1.9.3)
@@ -121,6 +125,7 @@ DEPENDENCIES
   rspec (~> 3.0)
   rubocop (~> 1.21)
   simplecov
+  simplecov-cobertura
   steep (~> 1.9)
 
 BUNDLED WITH
