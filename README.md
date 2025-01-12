@@ -45,8 +45,8 @@ To start a new workflow use `Autoflux::Workflow`:
 
 ```ruby
 workflow = Autoflux::Workflow.new(
-    agent: agent,
-    io: io,
+  agent: agent,
+  io: io,
 )
 
 workflow.run
@@ -62,8 +62,8 @@ The agent is an object with have `#name` and `#call` methods.
 require 'autoflux/openai'
 
 agent = Autoflux::OpenAI.new(
-    name: "chat",
-    model: "gpt-4o-mini"
+  name: "chat",
+  model: "gpt-4o-mini"
 )
 ```
 
@@ -71,15 +71,15 @@ The workflow will pass itself as context to the agent.
 
 ```ruby
 class MyAgent
-    attr_reader :name
+  attr_reader :name
 
-    def initialize(name:)
-      @name = name
-    end
+  def initialize(name:)
+    @name = name
+  end
 
-    def call(params, workflow:)
-      workflow.io.write("Hello, #{params[:name]}!")
-    end
+  def call(params, workflow:)
+    workflow.io.write("Hello, #{params[:name]}!")
+  end
 end
 
 ```
@@ -90,9 +90,9 @@ The agent can switch by workflow if the workflow knows it. You can use it in the
 
 ```ruby
 workflow = Autoflux::Workflow.new(
-    agent: agent1, # if not given the first agent in `agents` will be used
-    agents: [agent1, agent2],
-    io: io,
+  agent: agent1, # if not given the first agent in `agents` will be used
+  agents: [agent1, agent2],
+  io: io,
 )
 
 workflow.switch_agent("agent2")
@@ -122,11 +122,53 @@ The default `Autoflux::Stdio` implement the minimal Standard I/O support.
 require 'autoflux/stdio'
 
 workflow = Autoflux::Workflow.new(
-    agent: agent,
-    io: Autoflux::Stdio.new(prompt: '> ')
+  agent: agent,
+  io: Autoflux::Stdio.new(prompt: '> ')
 )
 
 workflow.run
+```
+
+### Step
+
+The step is an object with `#call` method to define the behavior.
+
+```ruby
+class MyCommand
+  def call(workflow:)
+    input = workflow.io.read
+    return Autoflux::Step::Stop.new if input.nil?
+    return Autoflux::Step::Stop.new if input == 'exit'
+
+    MyAgent.new(prompt: input)
+  end
+end
+```
+
+```ruby
+class MyAgent
+  attr_reader :prompt
+
+  def initialize(prompt:)
+    @prompt = prompt
+  end
+
+  def call(workflow:)
+    res = workflow.agent.call(prompt, workflow: workflow)
+    workflow.io.write(res.to_s)
+
+    MyCommand.new
+  end
+end
+```
+You can use it to design a state machine for the workflow.
+
+```ruby
+workflow = Autoflux::Workflow.new(
+  agent: agent,
+  io: io,
+  step: MyCommand.new
+)
 ```
 
 ## Development
