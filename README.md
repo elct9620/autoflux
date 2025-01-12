@@ -22,6 +22,9 @@ gem install autoflux
 
 ## Agent Implementations
 
+> [!TIP]
+> You may only need an agent to your workflow. The autoflux workflow is designed to multiple agents or multiple states.
+
 * [autoflux-openai](https://github.com/elct9620/autoflux-openai)
 
 ## Usage
