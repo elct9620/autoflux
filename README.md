@@ -1,6 +1,8 @@
 Autoflux
 ===
 
+[![Ruby](https://github.com/elct9620/autoflux/actions/workflows/main.yml/badge.svg)](https://github.com/elct9620/autoflux/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/elct9620/autoflux/graph/badge.svg?token=QJT017C6CP)](https://codecov.io/gh/elct9620/autoflux)
+
 A lightweight AI agent framework
 
 > [!WARNING]
