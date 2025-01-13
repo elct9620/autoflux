@@ -58,12 +58,12 @@ When the `io` is `EOF`, the workflow will stop.
 
 ### Agent
 
-The agent is an object with have `#name` and `#call` methods.
+The agent is an object have `#name` and `#call` methods.
 
 ```ruby
 require 'autoflux/openai'
 
-agent = Autoflux::OpenAI.new(
+agent = Autoflux::OpenAI::Agent.new(
   name: "chat",
   model: "gpt-4o-mini"
 )
