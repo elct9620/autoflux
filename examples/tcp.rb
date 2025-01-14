@@ -77,8 +77,8 @@ loop do
 
     workflow = Autoflux::Workflow.new(agent: agent, io: io)
     workflow.run
-    puts "Connection closed"
-
+  ensure
     io.close
+    puts "Connection closed"
   end
 end
