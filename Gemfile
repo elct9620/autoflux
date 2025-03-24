@@ -11,7 +11,7 @@ gem "rspec", "~> 3.0"
 
 gem "rubocop", "~> 1.74"
 
-gem "steep", "~> 1.9"
+gem "steep", "~> 1.10"
 
 gem "simplecov", require: false
 gem "simplecov-cobertura", require: false
