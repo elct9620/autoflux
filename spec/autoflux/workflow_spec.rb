@@ -128,7 +128,7 @@ RSpec.describe Autoflux::Workflow do
     context "when the agent is not found" do
       let(:name) { "unknown" }
 
-      it { is_expected.to be_falsey }
+      it { expect { switch_agent }.not_to change(workflow, :agent) }
     end
   end
 end

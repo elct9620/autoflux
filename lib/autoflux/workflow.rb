@@ -49,11 +49,7 @@ module Autoflux
 
     # Switch the agent.
     def switch_agent(name)
-      new_agent = agents.find { |agent| agent.name == name }
-      return false unless new_agent
-
-      @agent = new_agent
-      true
+      @agent = agents.find { |agent| agent.name == name } || @agent
     end
 
     # Stop the workflow.

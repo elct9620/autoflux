@@ -19,7 +19,7 @@ module Autoflux
     def initialize: (io: _IO, ?agent: _Agent, ?agents: Array[_Agent], ?id: String?, ?step: _Step) -> void
     def each: { (Workflow) -> void } -> void
     def run: () ?{ (Workflow) -> void } -> void
-    def switch_agent: (String name) -> bool
+    def switch_agent: (String name) -> _Agent
     def stop: () -> void
     def step: () -> _Step
     def to_h: () -> { id: String, step: String }
