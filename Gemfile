@@ -9,7 +9,7 @@ gem "rake", "~> 13.3"
 
 gem "rspec", "~> 3.13"
 
-gem "rubocop", "~> 1.77"
+gem "rubocop", "~> 1.78"
 
 gem "steep", "~> 1.10"
 
